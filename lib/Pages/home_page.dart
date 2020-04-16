@@ -62,7 +62,7 @@ class _HomePageState extends State<HomePage> {
                ),
                RaisedButton(
                  onPressed: (){
-
+                   _choiceAction();
                  },
                  child: Text('选择完毕'),
                ),
@@ -77,4 +77,33 @@ class _HomePageState extends State<HomePage> {
        ),
     );
   }
+
+  void _choiceAction(){
+    print('开始选择NIIT喜欢的类型----------');
+    if (typeController.text.toString() == '') {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(title: Text('美女类型不能为空'))
+      );
+    }else {
+      getHttp(typeController.text.toString()).then((val){
+        setState(() {
+          showText = val['data']['name'].toString();
+        });
+      });
+    }
+  }
+
+
+  Future getHttp(String TypeText) async {
+    try {
+      Response response;
+      var data = {'name': TypeText};
+      response = await Dio().get('https://www.easy-mock.com/mock/5c60131a4bed3a6342711498/baixing/dabaojian', queryParameters: data);
+      return response.data;
+    } catch (e) {
+      return print(e);
+    }
+  }
+
 }
